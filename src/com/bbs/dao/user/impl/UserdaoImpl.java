@@ -15,7 +15,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 	@Override
 	public int Verification(String userId, String userPsw) {
 		//创建要执行的SQL命令
-		String sql="select count(1) from bbs_user where userId=? and userPsw=?";
+		String sql="select count(1) from bbs_user where userID=? and usepwd=?";
 		//创建传递的参数数组
 		Object[] parms= {userId,userPsw};
 		//调用工具类中的查询方法
@@ -35,7 +35,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 
 	@Override
 	public int save(User user) {
-		String sql = "INSERT INTO bbs_user(userId,userpsw,userEmail,userSex,userPhoto,userScore,userLevel,userCreateDate) VALUES(?,?,?,?,?,default,default,default)";
+		String sql = "INSERT INTO bbs_user(userID,usepwd,userEmail,userSex,userPhoto,userScore,userLevel,userCreateDate) VALUES(?,?,?,?,?,default,default,default)";
 		Object[] params = {user.getUserId(),user.getUserpsw(),user.getUserEmail(),user.getUserSex(),user.getUserPhoto()};
 		return DataUtils.executeUpdate(sql, params);
 	}
@@ -49,7 +49,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 			while (rs.next()) {
 				User user = new User();
 				user.setUserId(rs.getString("userId"));
-				user.setUserpsw(rs.getString("userpsw"));
+				user.setUserpsw(rs.getString("usepwd"));
 				user.setUserEmail(rs.getString("userEmail"));
 				user.setUserSex(rs.getString("userSex"));
 				user.setUserPhoto(rs.getString("userPhoto"));
@@ -72,12 +72,12 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 	public User findEdit(String userId) {
 		User user = new User();
 		try {
-			String sql = "select * from bbs_user where userId=?";
+			String sql = "select * from bbs_user where userID=?";
 			Object[] params = {userId};
 			rs = DataUtils.queryAll(sql, params);
 			if(rs.next()) {
 				user.setUserId(rs.getString("userId"));
-				user.setUserpsw(rs.getString("userpsw"));
+				user.setUserpsw(rs.getString("usepwd"));
 				user.setUserEmail(rs.getString("userEmail"));
 				user.setUserSex(rs.getString("userSex"));
 				user.setUserPhoto(rs.getString("userPhoto"));
@@ -97,6 +97,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 
 	@Override
 	public int delAll(String[] uids) {
+		
 		StringBuffer sql = new StringBuffer("delete from bbs_user where userId in(");
 		// 根据参数数组的长度，拼接锁需要的?号个数
 		for (int i = 0; i < uids.length; i++) {
@@ -106,6 +107,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 			}
 		}
 		sql.append(")");
+		// delete from bbs_user where userid in(test001,test002)
 		return DataUtils.executeUpdate(sql.toString(), uids);
 	}
 
@@ -126,7 +128,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 			while (rs.next()) {
 				User user = new User();
 				user.setUserId(rs.getString("userId"));
-				user.setUserpsw(rs.getString("userpsw"));
+				user.setUserpsw(rs.getString("usepwd"));
 				user.setUserEmail(rs.getString("userEmail"));
 				user.setUserSex(rs.getString("userSex"));
 				user.setUserPhoto(rs.getString("userPhoto"));
@@ -148,7 +150,7 @@ public class UserdaoImpl implements com.bbs.dao.user.Userdao {
 
 	@Override
 	public int update(User user) {
-		String sql = "update bbs_user set userEmail=?,userpsw=?,userSex=? where userId=?";
+		String sql = "update bbs_user set userEmail=?,usepwd=?,userSex=? where userID=?";
 		Object[] params = {user.getUserEmail(),user.getUserpsw(),user.getUserSex(),user.getUserId()};
 		return DataUtils.executeUpdate(sql, params);
 	}
